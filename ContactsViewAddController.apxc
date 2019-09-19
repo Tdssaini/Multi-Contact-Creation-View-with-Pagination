@@ -1,0 +1,97 @@
+public class ContactsViewAddController{
+
+  public List<Contact> contactsToAdd{get;set;}
+  public List<Contact> contactsToView{get;set;}
+  public List<Contact> tempContacts{get;set;}
+  public boolean isSaved {get;set;}
+  /*This is configurable. We can show as much maximum records per page as we want*/
+  private final Integer maxRecordsPerPage = 3;
+  public Integer totalNoOfRecords{get;set;}
+  public List<String> pageNumberArray{get;set;}
+  public String selectedPageNumber{get; set;}
+  
+  /*
+  * Constructor 
+  *
+  * To initialize List variables and adding blank new contact in "Add Contact" section.
+  */
+  public ContactsViewAddController(){
+    contactsToAdd = new List<Contact>();
+    contactsToView = new List<Contact>();
+    tempContacts = new List<Contact>();
+    contactsToAdd.add(new Contact());
+  }
+  
+  /*
+  * Save method get called when someone clicks on Save button in "Add Contact" Section.
+  * 
+  * This method inserts the data in database, clears the data from "Add Contact" section table, 
+  *creates  Page Number on the basis of data and shows the record in "View Contact" section 
+  */
+  public void save(){
+   insert contactsToAdd;
+   ApexPages.addmessage(new ApexPages.message(ApexPages.Severity.INFO,'Data Saved Succesfully'));
+   isSaved = true;
+   
+   tempContacts.clear();
+   tempContacts.addAll(contactsToAdd);
+   
+   contactsToAdd.clear();
+   contactsToAdd.add(new Contact());
+      
+   totalNoOfRecords = tempContacts.size();
+   selectedPageNumber = '1';
+      
+   createPageNumberArray();
+   changePage();
+  }
+  
+   /*
+  * Add Contact method get called when someone clicks on Add Contact button in "Add Contact" Section. 
+  *
+  * This method creates a new Contact object with no data and adds that to "Add Contact" Section table. 
+  */
+  public void addContact(){
+     contactsToAdd.add(new Contact());
+  }
+  
+  /*
+  * createPageNumberArray is a supporting method that is called when someone saves the data in "Add Contact" Section
+  *
+  * This method creates a array of Page Number on the basis of Total Number of records we have to show and Max Number
+  * of records per page. This method is used to create pagination commandLinks.
+  */
+  public void createPageNumberArray(){
+   Double ceil =(Double) totalNoOfRecords / (Double)maxRecordsPerPage;
+   Integer totalNoOfPages = (Integer)Math.ceil(ceil);
+   System.debug(ceil+' '+totalNoOfPages+' '+totalNoOfRecords+' '+maxRecordsPerPage);
+   pageNumberArray = new List<String>();
+   for(Integer i=1;i<=totalNoOfpages;i++){
+     pageNumberArray.add(i+'');
+   }   
+  }
+  
+  /*
+  * changePage method is used to create the content for "View Contact" Section on the basis of selected page number.
+  */
+  public void changePage(){
+     contactsToView.clear();
+     Integer startIndex;
+     Integer endIndex;
+     Integer selectedPgNo = Integer.valueOf(selectedPageNumber);
+      if(selectedPgNo == 1){
+          startIndex = 0;
+          endIndex = maxRecordsPerPage; 
+      }else{
+          startIndex = (selectedPgNo-1)* maxRecordsPerPage;
+          endIndex = (selectedPgNo) * maxRecordsPerPage;
+      }
+      if(endIndex>totalNoOfRecords){
+          endIndex = totalNoOfRecords;
+      }
+      for(Integer i= startIndex;i<endIndex;i++){
+          contactsToView.add(tempContacts.get(i));
+      }
+  }
+  
+}
