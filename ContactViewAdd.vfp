@@ -1,0 +1,41 @@
+<apex:page controller="ContactsViewAddController" tabStyle="Contact">
+  <apex:form id="parentForm">
+      <apex:pageMessages />
+      <apex:pageBlock title="Add Contacts" id="addContactsDiv">
+          <apex:pageBlockTable value="{!contactsToAdd}" var="cont"> 
+              <apex:column headerValue="First Name">
+                  <apex:inputField value="{!cont.FirstName}"/>
+              </apex:column>
+              <apex:column headerValue="Last Name">
+                  <apex:inputField value="{!cont.LastName}"/>
+              </apex:column>
+              <apex:column headerValue="Phone">
+                  <apex:inputField value="{!cont.Phone}"/>
+              </apex:column>
+              <apex:column headerValue="Email">
+                  <apex:inputField value="{!cont.Email}"/>
+              </apex:column>
+          </apex:pageBlockTable>
+          <apex:pageBlockButtons >
+              <apex:commandButton action="{!save}" value="Save"/>
+              <apex:commandButton action="{!addContact}" value="Add Contact" reRender="addContactsDiv"/>
+          </apex:pageBlockButtons>
+      </apex:pageBlock>
+      <apex:pageBlock title="View Contacts" id="viewContactsDiv" rendered="{!isSaved}">
+          <apex:pageBlockTable value="{!contactsToView}" var="cont"> 
+              <apex:column headerValue="First Name" value="{!cont.FirstName}"/> 
+              <apex:column headerValue="Last Name" value="{!cont.LastName}"/>
+              <apex:column headerValue="Phone" value="{!cont.Phone}"/>
+              <apex:column headerValue="Email" value="{!cont.Email}"/>
+          </apex:pageBlockTable>
+          <apex:pageBlockButtons >
+              <apex:repeat value="{!pageNumberArray}" var="pageNumber">
+                  <a href="javascript:viewItem('{!pageNumber}');"> {!pageNumber} </a>
+              </apex:repeat>
+              <apex:actionFunction action="{!changePage}" name="viewItem"  reRender="parentForm" immediate="true">
+                 <apex:param name="selectedPgNo" value="" assignTo="{!selectedPageNumber}"/>
+              </apex:actionFunction>
+          </apex:pageBlockButtons>
+      </apex:pageBlock>     
+  </apex:form>
+</apex:page>
