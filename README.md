@@ -2,7 +2,8 @@
 
 #### A visualforce page which has 2 sections. First section have an option to create multiple contacts at a time.When contacts are saved in the first section, they get displayed in the second section. In the second section I have also implement pagination for easy navigation.
 
-Code Walkthrough: In this functionality I am using 2 pageBlockTable to showcase
+#### Code Walkthrough:
+In this functionality I am using 2 pageBlockTable to showcase
 contact fields in a Tabular format, one is for adding Contacts and other one is for
 showing Contacts. When our apex class constructor is called, I am adding a new Contact
 object in the Add Contact List with no data so that when our UI gets rendered it will
